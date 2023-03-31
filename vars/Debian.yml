@@ -1,4 +1,5 @@
 ---
 
-dnsmasq_package: 'dnsmasq-base'
+dnsmasq_package: dnsmasq-base
+dnsmasq_ndp_package: ndppd
 dnsmasq_configs_dir: /etc/dnsmasq.d

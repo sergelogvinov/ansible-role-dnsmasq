@@ -12,3 +12,5 @@ dnsmasq_dhcp_ranges: {}
   #   from: 192.168.0.10
   #   to: 192.168.0.20
   #   leasetime: 1h
+
+dnsmasq_ndp: false

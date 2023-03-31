@@ -60,3 +60,6 @@
     enabled: true
   with_items:
     - dnsmasq
+
+- import_tasks: ndp.yml
+  when: dnsmasq_ndp

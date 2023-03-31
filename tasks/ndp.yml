@@ -1,0 +1,23 @@
+---
+
+- name: Install proxy ndp
+  become: yes
+  apt:
+    name: "{{ dnsmasq_ndp_package }}"
+    state: present
+    install_recommends: false
+
+- name: NDP configs
+  become: yes
+  template:
+    src:  "ndppd.conf.j2"
+    dest: "/etc/ndppd.conf"
+  notify:
+    - ndppd restart
+
+- name: Start services ndppd
+  become: yes
+  service:
+    name:  ndppd
+    state: started
+    enabled: true
