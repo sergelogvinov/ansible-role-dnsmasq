@@ -1,0 +1,44 @@
+user=dnsmasq
+{% if dnsmasq_dnsservers|length > 0 %}
+resolv-file=/etc/resolv.conf.dnsmasq
+{% else %}
+resolv-file=/etc/resolv.conf
+{% endif %}
+dhcp-authoritative
+
+cache-size=1000
+no-negcache
+
+# Note that this is a DS record (ie a hash of the root Zone Signing Key)
+# If was downloaded from https://data.iana.org/root-anchors/root-anchors.xml
+dnssec
+trust-anchor=.,19036,8,2,49AAC11D7B6F6446702E54A1607371607A1A41855200FD2CE1CDDE32F24E8FB5
+trust-anchor=.,20326,8,2,E06D44B80B8F1D39A95C0B0D7C65D08458E880409BBC683457104237C7F8EC8D
+dnssec-check-unsigned
+
+except-interface=lo
+except-interface={{ ansible_default_ipv4['alias'] }}
+no-dhcp-interface={{ ansible_default_ipv4['alias'] }}
+
+{% if dnsmasq_interfaces|length > 0 %}
+{% for iface in dnsmasq_interfaces %}
+interface={{ iface }}
+{% endfor %}
+bind-interfaces
+{% endif %}
+
+enable-ra
+
+{% for iface in dnsmasq_interfaces %}
+{% if ansible_facts[iface].ipv4 is defined %}
+dhcp-option={{ iface }},6,{{ ansible_facts[iface].ipv4.address }}
+dhcp-option={{ iface }},26,{{ ansible_facts[iface].mtu }}
+{% if dnsmasq_dhcp_ranges[iface] %}
+dhcp-range={{ iface }},{{ dnsmasq_dhcp_ranges[iface].from }},{{ dnsmasq_dhcp_ranges[iface].to }},{{ dnsmasq_dhcp_ranges[iface].leasetime }}
+{% endif %}
+{% endif %}
+{% for ip in ansible_facts[iface].ipv6 %}{% if ip.address[:4] != 'fe80' %}
+dhcp-option={{ iface }},option6:dns-server,{{ ip.address }}
+dhcp-range={{ iface }},{{ ip.address }},ra-only,{{ ip.prefix }},24h
+{% endif %}{% endfor %}
+{% endfor %}

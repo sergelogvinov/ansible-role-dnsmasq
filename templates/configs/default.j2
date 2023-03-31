@@ -1,0 +1,12 @@
+user=dnsmasq
+{% if dnsmasq_configs_dnsservers|length > 0 %}
+resolv-file=/etc/resolv.conf.dnsmasq
+{% endif %}
+
+local=/lan/
+local=/local/
+cache-size=1000
+no-negcache
+
+# deny param --local-service in /etc/init.d/dnsmasq
+# except-interface=noopiface

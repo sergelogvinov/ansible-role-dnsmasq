@@ -1,0 +1,17 @@
+---
+
+- name: dnsmasq-systemctl-reload
+  become: yes
+  shell: systemctl daemon-reload
+
+- name: dnsmasq restart
+  become: yes
+  service:
+    name:  dnsmasq
+    state: restarted
+
+- name: dnsmasq reload
+  become: yes
+  service:
+    name:  dnsmasq
+    state: reloaded

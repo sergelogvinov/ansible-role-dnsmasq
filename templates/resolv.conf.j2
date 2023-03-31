@@ -1,0 +1,6 @@
+# resolv.conf for dnsmasq
+#
+{% for ns in dnsmasq_dnsservers %}
+nameserver {{ ns }}
+{% endfor %}
+options timeout:3 attempts:3

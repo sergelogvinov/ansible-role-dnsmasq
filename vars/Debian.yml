@@ -1,0 +1,4 @@
+---
+
+dnsmasq_package: 'dnsmasq-base'
+dnsmasq_configs_dir: /etc/dnsmasq.d

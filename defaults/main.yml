@@ -1,0 +1,14 @@
+---
+
+dnsmasq_configs: []
+
+dnsmasq_dnsservers: []
+  # ['8.8.8.8','8.8.4.4']
+dnsmasq_interfaces: []
+  # ['vmbr0']
+
+dnsmasq_dhcp_ranges: {}
+  # vmbr0:
+  #   from: 192.168.0.10
+  #   to: 192.168.0.20
+  #   leasetime: 1h
