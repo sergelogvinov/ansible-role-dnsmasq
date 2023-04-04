@@ -28,6 +28,7 @@ bind-interfaces
 {% endif %}
 
 enable-ra
+quiet-ra
 
 {% for iface in dnsmasq_interfaces %}
 {% if ansible_facts[iface].ipv4 is defined %}
@@ -38,7 +39,8 @@ dhcp-range={{ iface }},{{ dnsmasq_dhcp_ranges[iface].from }},{{ dnsmasq_dhcp_ran
 {% endif %}
 {% endif %}
 {% for ip in ansible_facts[iface].ipv6 %}{% if ip.address[:4] != 'fe80' %}
+ra-param={{ iface }},mtu:{{ iface }},low,60,9000
 dhcp-option={{ iface }},option6:dns-server,{{ ip.address }}
-dhcp-range={{ iface }},{{ ip.address }},ra-only,{{ ip.prefix }},24h
+dhcp-range={{ iface }},{{ ip.address }},ra-only,{{ ip.prefix }},infinite
 {% endif %}{% endfor %}
 {% endfor %}
