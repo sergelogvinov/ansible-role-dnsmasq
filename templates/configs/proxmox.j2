@@ -39,7 +39,7 @@ dhcp-option={{ iface }},26,{{ ansible_facts[iface].mtu }}
 dhcp-range={{ iface }},{{ dnsmasq_dhcp_ranges[iface].from }},{{ dnsmasq_dhcp_ranges[iface].to }},{{ dnsmasq_dhcp_ranges[iface].leasetime }}
 {% endif %}
 {% endif %}
-{% for ip in ansible_facts[iface].ipv6 %}{% if ip.address[:4] != 'fe80' %}
+{% for ip in ansible_facts[iface].ipv6 %}{% if ip.address[:4] != 'fe80' and ip.prefix != '128' %}
 ra-param={{ iface }},mtu:{{ iface }},low,60,9000
 dhcp-option={{ iface }},option6:dns-server,{{ ip.address }}
 dhcp-range={{ iface }},{{ ip.address }},ra-only,{{ ip.prefix }},infinite
