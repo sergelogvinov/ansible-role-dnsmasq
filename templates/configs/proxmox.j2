@@ -40,9 +40,11 @@ dhcp-range={{ iface }},{{ dnsmasq_dhcp_ranges[iface].from }},{{ dnsmasq_dhcp_ran
 {% endif %}
 {% endif %}
 {% for ip in ansible_facts[iface].ipv6 %}{% if ip.address[:4] != 'fe80' and ip.prefix != '128' %}
-ra-param={{ iface }},mtu:{{ iface }},low,60,9000
 dhcp-option={{ iface }},option6:dns-server,{{ ip.address }}
-dhcp-range={{ iface }},{{ ip.address }},ra-only,{{ ip.prefix }},infinite
+{% if ip.prefix == '64' %}
+dhcp-range={{ iface }},{{ ip.address | ansible.utils.ipsubnet(64,0) | ansible.utils.ipmath(0) }},ra-only,{{ ip.prefix }},infinite
+{% endif %}
+ra-param={{ iface }},mtu:{{ iface }},low,60,9000
 {% endif %}{% endfor %}
 {% endif %}
 {% endfor %}
