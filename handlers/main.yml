@@ -1,23 +1,23 @@
 ---
 
 - name: dnsmasq-systemctl-reload
-  become: yes
+  become: true
   shell: systemctl daemon-reload
 
 - name: dnsmasq restart
-  become: yes
+  become: true
   service:
     name:  dnsmasq
     state: restarted
 
 - name: dnsmasq reload
-  become: yes
+  become: true
   service:
     name:  dnsmasq
     state: reloaded
 
 - name: ndppd restart
-  become: yes
+  become: true
   service:
     name:  ndppd
     state: restarted

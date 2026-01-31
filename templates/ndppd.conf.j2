@@ -1,5 +1,5 @@
 
-proxy {{ ansible_default_ipv6['interface'] }} {
+proxy {{ ansible_facts["default_ipv6"]["interface"] }} {
 {% for iface in dnsmasq_interfaces %}{% for ip in ansible_facts[iface].ipv6 %}{% if ip.address[:4] != 'fe80' and ip.prefix != '128' %}
     rule {{ ip.address }}/{{ ip.prefix }} {
         auto

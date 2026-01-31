@@ -2,18 +2,18 @@
 
 - include_vars: "{{ item }}"
   with_first_found:
-    - "../vars/{{ ansible_os_family }}.yml"
+    - "../vars/{{ ansible_facts['os_family'] }}.yml"
     - "../vars/empty.yml"
 
 - name: Install dnsmasq
-  become: yes
+  become: true
   apt:
     name: "{{ dnsmasq_package }}"
     state: present
     install_recommends: false
 
 - name: 'Prepare directories'
-  become: yes
+  become: true
   file:
     path: "{{ item.name }}"
     mode: "{{ item.mode }}"
@@ -24,7 +24,7 @@
     - { name: /etc/dnsmasq.d,            mode: '0755' }
 
 - name: Configs
-  become: yes
+  become: true
   template:
     src:  "configs/{{ item|default('empty.j2') }}.j2"
     dest: "{{ dnsmasq_configs_dir }}/{{ item }}.conf"
@@ -33,7 +33,7 @@
     - dnsmasq restart
 
 - name: Update main config
-  become: yes
+  become: true
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -50,10 +50,10 @@
     - { src: "resolv.conf.j2",      dest: "/etc/resolv.conf.dnsmasq",             mode: '0644',
         when: "{{ dnsmasq_dnsservers|length > 0 }}" }
     - { src: "dnsmasq.service.j2",  dest: "/etc/systemd/system/dnsmasq.service",  mode: '0644',
-        when: "{{ ansible_service_mgr == 'systemd' }}" }
+      when: "{{ ansible_facts['service_mgr'] == 'systemd' }}" }
 
 - name: Start services dnsmasq
-  become: yes
+  become: true
   service:
     name:  "{{ item }}"
     state: started

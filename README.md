@@ -34,8 +34,8 @@ dnsmasq_interfaces: ["vmbr0"] # interfaces to manage
 dnsmasq_ndp: true             # proxy neighbor discovery
 dnsmasq_dhcp_ranges:          # dhcp-v4 range
   vmbr0:
-    from: "{{ ansible_vmbr0.ipv4.address | ansible.utils.ipmath(-51) }}"
-    to:   "{{ ansible_vmbr0.ipv4.address | ansible.utils.ipmath(-31) }}"
+    from: "{{ ansible_facts['vmbr0'].ipv4.address | ansible.utils.ipmath(-51) }}"
+    to:   "{{ ansible_facts['vmbr0'].ipv4.address | ansible.utils.ipmath(-31) }}"
     leasetime: 12h
 ```
 
