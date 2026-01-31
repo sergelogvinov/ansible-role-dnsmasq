@@ -9,7 +9,7 @@
 
 - name: NDP configs
   become: true
-  template:
+  ansible.builtin.template:
     src:  "ndppd.conf.j2"
     dest: "/etc/ndppd.conf"
   notify:

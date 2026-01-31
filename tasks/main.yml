@@ -7,14 +7,14 @@
 
 - name: Install dnsmasq
   become: true
-  apt:
+  ansible.builtin.apt:
     name: "{{ dnsmasq_package }}"
     state: present
     install_recommends: false
 
 - name: 'Prepare directories'
   become: true
-  file:
+  ansible.builtin.file:
     path: "{{ item.name }}"
     mode: "{{ item.mode }}"
     owner: root
@@ -25,16 +25,16 @@
 
 - name: Configs
   become: true
-  template:
+  ansible.builtin.template:
     src:  "configs/{{ item|default('empty.j2') }}.j2"
     dest: "{{ dnsmasq_configs_dir }}/{{ item }}.conf"
-  with_items: "{{ dnsmasq_configs }}"
+  loop: "{{ dnsmasq_configs }}"
   notify:
     - dnsmasq restart
 
 - name: Update main config
   become: true
-  template:
+  ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     owner: root
