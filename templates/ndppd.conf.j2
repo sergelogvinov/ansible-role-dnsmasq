@@ -1,8 +1,13 @@
 
+{% set subnets = [] %}
 proxy {{ ansible_facts["default_ipv6"]["interface"] }} {
 {% for iface in dnsmasq_interfaces %}{% for ip in ansible_facts[iface].ipv6 %}{% if ip.address[:4] != 'fe80' and ip.prefix != '128' %}
-    rule {{ ip.address }}/{{ ip.prefix }} {
+{% set subnet = ip.address | ansible.utils.ipsubnet(ip.prefix, 0) %}
+{% if subnet not in subnets %}
+{% set _ = subnets.append(subnet) %}
+    rule {{ subnet }} {
         auto
     }
+{% endif %}
 {% endif %}{% endfor %}{% endfor %}
 }
